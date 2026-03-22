@@ -2,22 +2,33 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../api/axios'
 import FormationCard from '../components/FormationCard'
+import useCountUp from '../hooks/useCountUp'
+import useScrollReveal from '../hooks/useScrollReveal'
 
 const testimonials = [
-  { name: 'Amina Kone', role: 'Développeuse Web', text: 'Les formations sont claires et bien structurées. J\'ai trouvé un emploi 2 mois après ma formation !', avatar: 'A' },
-  { name: 'Pierre Morin', role: 'Data Analyst', text: 'Excellent contenu, formateurs compétents. La plateforme est intuitive et agréable à utiliser.', avatar: 'P' },
-  { name: 'Sara Benmoussa', role: 'UX Designer', text: 'J\'ai doublé mon salaire grâce à la formation Design. Je recommande vivement !', avatar: 'S' },
+  { name: 'Amina Kone', role: 'Développeuse Web', text: 'Les formations sont claires et bien structurées. J\'ai trouvé un emploi 2 mois après ma formation !', avatar: 'A', color: 'from-primary-400 to-primary-600' },
+  { name: 'Pierre Morin', role: 'Data Analyst', text: 'Excellent contenu, formateurs compétents. La plateforme est intuitive et agréable à utiliser.', avatar: 'P', color: 'from-orange-400 to-orange-600' },
+  { name: 'Sara Benmoussa', role: 'UX Designer', text: 'J\'ai doublé mon salaire grâce à la formation Design. Je recommande vivement !', avatar: 'S', color: 'from-purple-400 to-purple-600' },
 ]
 
-const stats = [
-  { value: '50+', label: 'Formations disponibles' },
-  { value: '2 000+', label: 'Apprenants actifs' },
-  { value: '95%', label: 'Taux de satisfaction' },
-  { value: '15+', label: 'Formateurs experts' },
-]
+function StatCard({ value, suffix = '', label, start }) {
+  const count = useCountUp(value, 2000, start)
+  return (
+    <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-primary-50 to-orange-50 dark:from-primary-900/20 dark:to-orange-900/10 hover:scale-105 transition-transform duration-300">
+      <div className="text-3xl font-black text-primary-600 dark:text-primary-400">
+        {count}{suffix}
+      </div>
+      <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{label}</div>
+    </div>
+  )
+}
 
 export default function Home() {
   const [formations, setFormations] = useState([])
+  const [statsRef, statsVisible] = useScrollReveal()
+  const [formationsRef, formationsVisible] = useScrollReveal()
+  const [conceptRef, conceptVisible] = useScrollReveal()
+  const [testiRef, testiVisible] = useScrollReveal()
 
   useEffect(() => {
     api.get('/formations').then(r => setFormations(r.data.slice(0, 3))).catch(() => {})
@@ -27,45 +38,41 @@ export default function Home() {
     <div>
       {/* HERO */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 text-white">
-        {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-20 -right-20 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"/>
-          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl"/>
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl animate-pulse-slow"/>
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}/>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-white/5 rounded-full blur-2xl"/>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="animate-slide-up">
-              {/* Logo large */}
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-white/30 to-orange-400 border-2 border-white/40 flex items-center justify-center shadow-xl">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-white/30 to-orange-400 border-2 border-white/40 flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-300">
                   <span className="text-white font-black text-3xl">S</span>
                 </div>
                 <div>
                   <h1 className="text-3xl lg:text-4xl font-black leading-tight">SE FORMER,<br/><span className="text-orange-300">ÉVOLUER</span></h1>
                 </div>
               </div>
-
               <p className="text-lg text-primary-100 mb-4 font-medium">
                 La SYNERGIE de nos compétences au service de la formation
               </p>
               <p className="text-primary-200 text-base mb-8 leading-relaxed max-w-lg">
-                Développez vos compétences avec des formations de qualité, dispensées par des experts du domaine. Apprenez à votre rythme, progressez, évoluez.
+                Développez vos compétences avec des formations de qualité, dispensées par des experts. Apprenez à votre rythme, progressez, évoluez.
               </p>
-
               <div className="flex flex-wrap gap-4">
-                <Link to="/formations" className="btn-orange text-base px-8 py-3">
+                <Link to="/formations" className="btn-orange text-base px-8 py-3 hover:scale-105 transition-transform">
                   Voir les formations
                 </Link>
-                <Link to="/register" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 text-base">
+                <Link to="/register" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 text-base hover:scale-105">
                   S'inscrire gratuitement
                 </Link>
               </div>
             </div>
 
-            {/* Right illustration */}
             <div className="hidden lg:flex justify-center">
-              <div className="relative">
+              <div className="relative animate-fade-in" style={{ animationDelay: '0.3s' }}>
                 <div className="w-72 h-72 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
                   <div className="w-52 h-52 rounded-full bg-gradient-to-br from-orange-400/50 to-primary-500/50 flex items-center justify-center">
                     <svg className="w-28 h-28 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,11 +80,10 @@ export default function Home() {
                     </svg>
                   </div>
                 </div>
-                {/* Floating badges */}
-                <div className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-primary-600 dark:text-primary-300">
+                <div className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-primary-600 dark:text-primary-300 animate-bounce-slow">
                   🎓 50+ Formations
                 </div>
-                <div className="absolute -bottom-4 -left-4 bg-orange-500 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-white">
+                <div className="absolute -bottom-4 -left-4 bg-orange-500 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-white animate-bounce-slow" style={{ animationDelay: '0.5s' }}>
                   ✨ 95% satisfaits
                 </div>
               </div>
@@ -85,7 +91,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Wave */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 80" className="w-full fill-white dark:fill-gray-950">
             <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z"/>
@@ -93,41 +98,43 @@ export default function Home() {
         </div>
       </section>
 
-      {/* STATS */}
-      <section className="py-12 bg-white dark:bg-gray-950">
+      {/* STATS avec compteurs animés */}
+      <section className="py-12 bg-white dark:bg-gray-950" ref={statsRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {stats.map((s, i) => (
-              <div key={i} className="text-center p-6 rounded-2xl bg-gradient-to-br from-primary-50 to-orange-50 dark:from-primary-900/20 dark:to-orange-900/10">
-                <div className="text-3xl font-black text-primary-600 dark:text-primary-400">{s.value}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{s.label}</div>
-              </div>
-            ))}
+          <div className={`grid grid-cols-2 lg:grid-cols-4 gap-6 transition-all duration-700 ${statsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <StatCard value={50}   suffix="+"  label="Formations disponibles" start={statsVisible}/>
+            <StatCard value={2000} suffix="+"  label="Apprenants actifs"       start={statsVisible}/>
+            <StatCard value={95}   suffix="%"  label="Taux de satisfaction"    start={statsVisible}/>
+            <StatCard value={15}   suffix="+"  label="Formateurs experts"      start={statsVisible}/>
           </div>
         </div>
       </section>
 
       {/* FORMATIONS POPULAIRES */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-gray-50 dark:bg-gray-900" ref={formationsRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className={`text-center mb-12 transition-all duration-700 ${formationsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Populaires</span>
             <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2">Nos formations phares</h2>
             <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">
-              Sélectionnées par nos experts pour leur qualité et leur pertinence sur le marché.
+              Sélectionnées par nos experts pour leur qualité et pertinence sur le marché.
             </p>
           </div>
 
           {formations.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              {formations.map(f => <FormationCard key={f.id} formation={f}/>)}
+            <div className={`grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10 transition-all duration-700 delay-200 ${formationsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+              {formations.map((f, i) => <FormationCard key={f.id} formation={f} index={i}/>)}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-400">Chargement des formations...</div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="card h-80 animate-pulse bg-gray-200 dark:bg-gray-700"/>
+              ))}
+            </div>
           )}
 
           <div className="text-center">
-            <Link to="/formations" className="btn-primary text-base px-10 py-3">
+            <Link to="/formations" className="btn-primary text-base px-10 py-3 hover:scale-105 transition-transform">
               Voir toutes les formations →
             </Link>
           </div>
@@ -135,9 +142,9 @@ export default function Home() {
       </section>
 
       {/* CONCEPT */}
-      <section className="py-16 bg-white dark:bg-gray-950">
+      <section className="py-16 bg-white dark:bg-gray-950" ref={conceptRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className={`grid lg:grid-cols-2 gap-12 items-center transition-all duration-700 ${conceptVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <div>
               <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Notre approche</span>
               <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2 mb-6">
@@ -150,7 +157,7 @@ export default function Home() {
                   { icon: '🏆', title: 'Certification reconnue', desc: 'Obtenez des certificats valorisables sur votre CV et LinkedIn.' },
                   { icon: '👥', title: 'Communauté active', desc: 'Rejoignez une communauté d\'apprenants passionnés et de mentors disponibles.' },
                 ].map((item, i) => (
-                  <div key={i} className="flex gap-4">
+                  <div key={i} className="flex gap-4 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-200" style={{ transitionDelay: `${i * 100}ms` }}>
                     <div className="text-2xl">{item.icon}</div>
                     <div>
                       <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
@@ -161,15 +168,15 @@ export default function Home() {
               </div>
             </div>
             <div className="relative">
-              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white">
+              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white shadow-2xl shadow-primary-500/20">
                 <h3 className="text-xl font-bold mb-6">Votre parcours en 3 étapes</h3>
                 {[
                   { step: '01', title: 'Choisissez votre formation', desc: 'Parcourez notre catalogue et sélectionnez la formation qui correspond à vos objectifs.' },
                   { step: '02', title: 'Apprenez à votre rythme', desc: 'Suivez les modules vidéo, exercices pratiques et projets guidés.' },
-                  { step: '03', title: 'Obtenez votre certificat', desc: 'Validez vos acquis et décrrochez votre certification reconnue.' },
+                  { step: '03', title: 'Obtenez votre certificat', desc: 'Validez vos acquis et décrochez votre certification reconnue.' },
                 ].map((item, i) => (
-                  <div key={i} className={`flex gap-4 ${i < 2 ? 'mb-6' : ''}`}>
-                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center font-black text-sm shrink-0">{item.step}</div>
+                  <div key={i} className={`flex gap-4 ${i < 2 ? 'mb-6' : ''} group`}>
+                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center font-black text-sm shrink-0 group-hover:scale-110 transition-transform duration-200">{item.step}</div>
                     <div>
                       <h4 className="font-bold text-sm">{item.title}</h4>
                       <p className="text-primary-200 text-xs mt-1">{item.desc}</p>
@@ -183,15 +190,15 @@ export default function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+      <section className="py-16 bg-gray-50 dark:bg-gray-900" ref={testiRef}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <div className={`text-center mb-12 transition-all duration-700 ${testiVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Témoignages</span>
             <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2">Ce qu'ils disent de nous</h2>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className={`grid md:grid-cols-3 gap-6 transition-all duration-700 delay-200 ${testiVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
             {testimonials.map((t, i) => (
-              <div key={i} className="card p-6">
+              <div key={i} className="card p-6 hover:-translate-y-1 transition-transform duration-300" style={{ transitionDelay: `${i * 100}ms` }}>
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(5)].map((_, s) => (
                     <svg key={s} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
@@ -199,9 +206,9 @@ export default function Home() {
                     </svg>
                   ))}
                 </div>
-                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">"{t.text}"</p>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 italic">"{t.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-bold`}>
                     {t.avatar}
                   </div>
                   <div>
@@ -220,11 +227,11 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl lg:text-4xl font-black mb-4">Prêt à évoluer ?</h2>
           <p className="text-primary-200 text-lg mb-8">
-            Rejoignez des milliers d'apprenants qui ont transformé leur carrière avec nos formations.
+            Rejoignez des milliers d'apprenants qui ont transformé leur carrière.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/register" className="btn-orange text-base px-10 py-4">Commencer gratuitement</Link>
-            <Link to="/formations" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-4 px-10 rounded-full transition-all duration-200 text-base">
+            <Link to="/register" className="btn-orange text-base px-10 py-4 hover:scale-105 transition-transform">Commencer gratuitement</Link>
+            <Link to="/formations" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-4 px-10 rounded-full transition-all duration-200 text-base hover:scale-105">
               Voir les formations
             </Link>
           </div>

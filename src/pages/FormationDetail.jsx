@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import StarRating from '../components/StarRating'
 
 const levelColors = {
@@ -14,6 +15,7 @@ export default function FormationDetail() {
   const { id } = useParams()
   const { user } = useAuth()
   const navigate = useNavigate()
+  const toast = useToast()
   const [formation, setFormation] = useState(null)
   const [enrollment, setEnrollment] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -39,8 +41,11 @@ export default function FormationDetail() {
       await api.post(`/formations/${id}/enroll`)
       const r = await api.get(`/users/enrolled/${id}`)
       setEnrollment(r.data)
+      toast.success('🎉 Inscription réussie ! Bonne formation !')
     } catch (e) {
-      setError(e.response?.data?.message || 'Erreur lors de l\'inscription')
+      const msg = e.response?.data?.message || 'Erreur lors de l\'inscription'
+      setError(msg)
+      toast.error(msg)
     } finally {
       setEnrolling(false)
     }
@@ -53,8 +58,9 @@ export default function FormationDetail() {
       await api.post(`/formations/${id}/rate`, { rating: myRating, comment: myComment })
       const r = await api.get(`/formations/${id}`)
       setFormation(r.data)
+      toast.success('Merci pour votre avis !')
     } catch (e) {
-      setError(e.response?.data?.message || 'Erreur')
+      toast.error(e.response?.data?.message || 'Erreur')
     } finally {
       setRatingSubmitting(false)
     }

@@ -13,13 +13,13 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-6 rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0;
+    @apply bg-primary-500 hover:bg-primary-600 text-white font-semibold py-2.5 px-6 rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-95;
   }
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-primary-600 font-semibold py-2.5 px-6 rounded-full border-2 border-primary-500 transition-all duration-200 hover:shadow-md;
+    @apply bg-white hover:bg-gray-50 text-primary-600 font-semibold py-2.5 px-6 rounded-full border-2 border-primary-500 transition-all duration-200 hover:shadow-md active:scale-95;
   }
   .btn-orange {
-    @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5;
+    @apply bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-full transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-95;
   }
   .card {
     @apply bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden;
@@ -32,16 +32,52 @@
   }
 }
 
-/* Custom scrollbar */
+/* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { @apply bg-gray-100 dark:bg-gray-800; }
 ::-webkit-scrollbar-thumb { @apply bg-primary-300 rounded-full; }
 ::-webkit-scrollbar-thumb:hover { @apply bg-primary-500; }
 
-/* Wave animation */
-.wave-container { overflow: hidden; }
-.wave-path { animation: wave 8s ease-in-out infinite alternate; }
-@keyframes wave {
-  0%   { d: path("M0,60 C150,100 350,0 500,50 C650,100 800,20 960,60 L960,120 L0,120 Z"); }
-  100% { d: path("M0,80 C150,20 350,100 500,40 C650,-10 800,80 960,40 L960,120 L0,120 Z"); }
+/* ── Animations ──────────────────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bounceSlow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.animate-fade-in       { animation: fadeIn 0.4s ease-out both; }
+.animate-slide-up      { animation: slideUp 0.5s ease-out both; }
+.animate-slide-in-right{ animation: slideInRight 0.35s cubic-bezier(0.22,1,0.36,1) both; }
+.animate-bounce-slow   { animation: bounceSlow 3s ease-in-out infinite; }
+.animate-pulse-slow    { animation: pulse 4s cubic-bezier(0.4,0,0.6,1) infinite; }
+
+/* Skeleton shimmer */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+.dark .skeleton-shimmer {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
 }

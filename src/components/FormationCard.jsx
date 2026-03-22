@@ -6,24 +6,31 @@ const levelColors = {
   'avancé':        'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
-export default function FormationCard({ formation }) {
+export default function FormationCard({ formation, index = 0 }) {
   const { id, title, short_description, category, level, price, image_url, instructor, avg_rating, rating_count, enrollment_count, duration } = formation
 
   return (
-    <Link to={`/formations/${id}`} className="card group flex flex-col hover:-translate-y-1">
+    <Link to={`/formations/${id}`}
+      className="card group flex flex-col hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-300"
+      style={{ animationDelay: `${index * 80}ms` }}>
+
       {/* Image */}
       <div className="relative h-44 overflow-hidden bg-gradient-to-br from-primary-100 to-orange-100 dark:from-primary-900 dark:to-orange-900">
         {image_url ? (
-          <img src={image_url} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>
+          <img src={image_url} alt={title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-orange-400 flex items-center justify-center">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-orange-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
               </svg>
             </div>
           </div>
         )}
+
+        {/* Overlay shimmer on hover */}
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"/>
+
         <div className="absolute top-3 left-3">
           <span className={`badge ${levelColors[level] || 'bg-gray-100 text-gray-700'}`}>{level}</span>
         </div>
@@ -32,11 +39,14 @@ export default function FormationCard({ formation }) {
             <span className="badge bg-white/90 dark:bg-gray-800/90 text-gray-600 dark:text-gray-300">{category}</span>
           </div>
         )}
+
+        {/* Price overlay */}
+        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
       </div>
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-5">
-        <h3 className="font-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+        <h3 className="font-bold text-gray-900 dark:text-white text-base mb-2 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-200">
           {title}
         </h3>
         <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-3 flex-1">
@@ -76,10 +86,10 @@ export default function FormationCard({ formation }) {
                 <span className="text-xs text-gray-400">({rating_count})</span>
               </>
             ) : (
-              <span className="text-xs text-gray-400">Nouveau</span>
+              <span className="text-xs text-gray-400 italic">Nouveau</span>
             )}
           </div>
-          <span className="font-bold text-primary-600 dark:text-primary-400 text-lg">
+          <span className={`font-bold text-lg transition-colors duration-200 ${price === 0 ? 'text-green-600 dark:text-green-400' : 'text-primary-600 dark:text-primary-400 group-hover:text-orange-500'}`}>
             {price === 0 ? 'Gratuit' : `${price} €`}
           </span>
         </div>

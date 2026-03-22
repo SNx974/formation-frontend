@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import api from '../api/axios'
 import FormationCard from '../components/FormationCard'
+import { SkeletonCard } from '../components/Skeleton'
 
 const levels = ['Tous', 'débutant', 'intermédiaire', 'avancé']
 
@@ -30,8 +31,11 @@ export default function Formations() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-gray-900 dark:to-primary-900 py-14 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="bg-gradient-to-r from-primary-600 to-primary-800 dark:from-gray-900 dark:to-primary-900 py-14 text-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-10 -right-10 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl"/>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-4xl font-black mb-3">Nos Formations</h1>
           <p className="text-primary-200 text-lg max-w-xl mx-auto">
             Explorez notre catalogue et trouvez la formation qui correspond à vos objectifs.
@@ -42,29 +46,23 @@ export default function Formations() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-4 mb-8 flex flex-col sm:flex-row gap-4">
-          {/* Search */}
           <div className="flex-1 relative">
             <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <input type="text" placeholder="Rechercher une formation..." value={search} onChange={e => setSearch(e.target.value)}
-              className="input pl-10"/>
+            <input type="text" placeholder="Rechercher une formation..." value={search} onChange={e => setSearch(e.target.value)} className="input pl-10"/>
           </div>
-
-          {/* Category */}
           <select value={category} onChange={e => setCategory(e.target.value)} className="input sm:w-48">
             <option value="">Toutes catégories</option>
             {categories.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-
-          {/* Level */}
           <div className="flex gap-2 flex-wrap">
             {levels.map(l => (
               <button key={l} onClick={() => setLevel(l === 'Tous' ? '' : l)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200
                   ${(l === 'Tous' && !level) || level === l
-                    ? 'bg-primary-500 text-white shadow-md'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}>
+                    ? 'bg-primary-500 text-white shadow-md scale-105'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 hover:scale-105'}`}>
                 {l.charAt(0).toUpperCase() + l.slice(1)}
               </button>
             ))}
@@ -74,22 +72,25 @@ export default function Formations() {
         {/* Results */}
         {loading ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="card h-80 animate-pulse bg-gray-200 dark:bg-gray-700"/>
-            ))}
+            {[...Array(6)].map((_, i) => <SkeletonCard key={i}/>)}
           </div>
         ) : formations.length > 0 ? (
           <>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{formations.length} formation{formations.length > 1 ? 's' : ''} trouvée{formations.length > 1 ? 's' : ''}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary-500 inline-block"/>
+              {formations.length} formation{formations.length > 1 ? 's' : ''} trouvée{formations.length > 1 ? 's' : ''}
+            </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {formations.map(f => <FormationCard key={f.id} formation={f}/>)}
+              {formations.map((f, i) => <FormationCard key={f.id} formation={f} index={i}/>)}
             </div>
           </>
         ) : (
           <div className="text-center py-20">
-            <div className="text-5xl mb-4">🔍</div>
+            <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-bold text-gray-700 dark:text-gray-300 mb-2">Aucune formation trouvée</h3>
             <p className="text-gray-400">Essayez d'autres critères de recherche.</p>
+            <button onClick={() => { setSearch(''); setCategory(''); setLevel('') }}
+              className="btn-primary mt-4 text-sm">Réinitialiser les filtres</button>
           </div>
         )}
       </div>

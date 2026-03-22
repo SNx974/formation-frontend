@@ -1,14 +1,22 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 
 export default function Dashboard() {
   const { user } = useAuth()
+  const toast = useToast()
   const [formations, setFormations] = useState([])
   const [certs, setCerts] = useState([])
   const [stats, setStats] = useState(null)
   const [activeTab, setActiveTab] = useState('formations')
+  const [animatedBars, setAnimatedBars] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setAnimatedBars(true), 300)
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     api.get('/users/my-formations').then(r => setFormations(r.data)).catch(() => {})
@@ -23,7 +31,11 @@ export default function Dashboard() {
       setFormations(r.data)
       const s = await api.get('/users/stats')
       setStats(s.data)
-    } catch {}
+      if (progress === 100) toast.success('🏆 Formation terminée ! Certificat débloqué !')
+      else toast.info(`Progression mise à jour : ${progress}%`)
+    } catch {
+      toast.error('Erreur lors de la mise à jour')
+    }
   }
 
   return (
@@ -105,13 +117,15 @@ export default function Dashboard() {
                       <h3 className="font-bold text-gray-900 dark:text-white mb-1 line-clamp-1">{f.title}</h3>
                       <p className="text-xs text-gray-400 mb-3">{f.instructor}</p>
 
-                      {/* Progress */}
+                      {/* Progress animée */}
                       <div className="mb-3">
                         <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
-                          <span>Progression</span><span className="font-semibold">{f.progress}%</span>
+                          <span>Progression</span>
+                          <span className="font-semibold text-primary-600 dark:text-primary-400">{f.progress}%</span>
                         </div>
-                        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full">
-                          <div className="h-2 bg-gradient-to-r from-primary-500 to-orange-400 rounded-full transition-all duration-500" style={{ width: `${f.progress}%` }}/>
+                        <div className="h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div className="h-2 bg-gradient-to-r from-primary-500 to-orange-400 rounded-full transition-all duration-1000 ease-out"
+                            style={{ width: animatedBars ? `${f.progress}%` : '0%' }}/>
                         </div>
                       </div>
 
