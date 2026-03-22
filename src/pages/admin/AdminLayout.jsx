@@ -6,8 +6,10 @@ import { useTheme } from '../../context/ThemeContext'
 const nav = [
   { path: '/admin', label: 'Tableau de bord', icon: '📊', exact: true },
   { path: '/admin/formations', label: 'Formations', icon: '📚' },
+  { path: '/admin/inscriptions', label: 'Demandes', icon: '📨' },
   { path: '/admin/users', label: 'Utilisateurs', icon: '👥' },
-  { path: '/admin/enrollments', label: 'Inscriptions', icon: '📋' },
+  { path: '/admin/enrollments', label: 'Accès plateforme', icon: '📋' },
+  { path: '/admin/settings', label: 'Paramètres', icon: '⚙️' },
 ]
 
 export default function AdminLayout() {

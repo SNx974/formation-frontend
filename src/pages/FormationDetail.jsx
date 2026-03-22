@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import { MapPin, Clock, Users, Target, BookOpen, Award, ChevronDown, CalendarDays } from 'lucide-react'
 import api from '../api/axios'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import StarRating from '../components/StarRating'
+import InscriptionForm from '../components/InscriptionForm'
 
 const levelColors = {
   'débutant': 'bg-green-100 text-green-700',
@@ -17,39 +19,16 @@ export default function FormationDetail() {
   const navigate = useNavigate()
   const toast = useToast()
   const [formation, setFormation] = useState(null)
-  const [enrollment, setEnrollment] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [enrolling, setEnrolling] = useState(false)
   const [openModule, setOpenModule] = useState(0)
   const [myRating, setMyRating] = useState(0)
   const [myComment, setMyComment] = useState('')
   const [ratingSubmitting, setRatingSubmitting] = useState(false)
-  const [error, setError] = useState('')
+  const [showForm, setShowForm] = useState(false)
 
   useEffect(() => {
     api.get(`/formations/${id}`).then(r => setFormation(r.data)).catch(() => navigate('/formations')).finally(() => setLoading(false))
-    if (user) {
-      api.get(`/users/enrolled/${id}`).then(r => setEnrollment(r.data)).catch(() => {})
-    }
-  }, [id, user])
-
-  const handleEnroll = async () => {
-    if (!user) return navigate('/login')
-    setEnrolling(true)
-    setError('')
-    try {
-      await api.post(`/formations/${id}/enroll`)
-      const r = await api.get(`/users/enrolled/${id}`)
-      setEnrollment(r.data)
-      toast.success('🎉 Inscription réussie ! Bonne formation !')
-    } catch (e) {
-      const msg = e.response?.data?.message || 'Erreur lors de l\'inscription'
-      setError(msg)
-      toast.error(msg)
-    } finally {
-      setEnrolling(false)
-    }
-  }
+  }, [id])
 
   const handleRating = async () => {
     if (!myRating) return
@@ -89,6 +68,10 @@ export default function FormationDetail() {
               <div className="flex flex-wrap gap-2 mb-4">
                 {formation.category && <span className="badge bg-white/20 text-white">{formation.category}</span>}
                 <span className={`badge ${levelColors[formation.level] || 'bg-gray-100 text-gray-700'}`}>{formation.level}</span>
+                {/* Qualiopi badge */}
+                <span className="badge bg-orange-500 text-white flex items-center gap-1">
+                  <Award className="w-3 h-3"/> Qualiopi
+                </span>
               </div>
               <h1 className="text-3xl lg:text-4xl font-black mb-4">{formation.title}</h1>
               <p className="text-primary-200 text-lg mb-6">{formation.short_description}</p>
@@ -101,52 +84,54 @@ export default function FormationDetail() {
                     <span>({formation.rating_count} avis)</span>
                   </span>
                 )}
-                {formation.enrollment_count > 0 && <span>👥 {formation.enrollment_count} inscrits</span>}
-                {formation.duration && <span>⏱ {formation.duration}</span>}
-                {formation.instructor && <span>👨‍🏫 {formation.instructor}</span>}
+                {formation.enrollment_count > 0 && (
+                  <span className="flex items-center gap-1.5"><Users className="w-4 h-4"/> {formation.enrollment_count} inscrits</span>
+                )}
+                {formation.duration && (
+                  <span className="flex items-center gap-1.5"><Clock className="w-4 h-4"/> {formation.duration}</span>
+                )}
+                {formation.lieu && (
+                  <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4"/> {formation.lieu}</span>
+                )}
+                {formation.instructor && (
+                  <span className="flex items-center gap-1.5">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd"/></svg>
+                    {formation.instructor}
+                  </span>
+                )}
               </div>
             </div>
 
-            {/* Enrollment card */}
+            {/* Inscription card */}
             <div className="lg:col-span-1">
               <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 text-gray-900 dark:text-white">
                 {formation.image_url && (
                   <img src={formation.image_url} alt={formation.title} className="w-full h-40 object-cover rounded-xl mb-4"/>
                 )}
-                <div className="text-3xl font-black text-primary-600 dark:text-primary-400 mb-4">
-                  {formation.price === 0 ? 'Gratuit' : `${formation.price} €`}
-                </div>
 
-                {enrollment ? (
-                  <div>
-                    <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 mb-4">
-                      <p className="text-green-700 dark:text-green-400 font-semibold text-sm">✅ Vous êtes inscrit</p>
-                      <div className="mt-2">
-                        <div className="flex justify-between text-xs text-gray-500 mb-1">
-                          <span>Progression</span><span>{enrollment.progress}%</span>
-                        </div>
-                        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full">
-                          <div className="h-2 bg-gradient-to-r from-primary-500 to-orange-400 rounded-full transition-all" style={{ width: `${enrollment.progress}%` }}/>
-                        </div>
-                      </div>
-                    </div>
-                    <Link to="/dashboard" className="btn-primary w-full text-center block">Accéder au cours →</Link>
-                  </div>
+                {showForm ? (
+                  <InscriptionForm formation={formation} onClose={() => setShowForm(false)}/>
                 ) : (
-                  <div>
-                    {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-                    <button onClick={handleEnroll} disabled={enrolling} className="btn-primary w-full mb-3 disabled:opacity-50">
-                      {enrolling ? 'Inscription...' : user ? 'S\'inscrire maintenant' : 'Se connecter pour s\'inscrire'}
+                  <>
+                    {formation.sessions && (
+                      <div className="bg-primary-50 dark:bg-primary-900/20 rounded-xl p-3 mb-4">
+                        <div className="flex items-center gap-2 text-primary-700 dark:text-primary-300 text-sm font-semibold mb-1">
+                          <CalendarDays className="w-4 h-4"/> Prochaines sessions
+                        </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{formation.sessions}</p>
+                      </div>
+                    )}
+                    <button onClick={() => setShowForm(true)} className="btn-primary w-full mb-3">
+                      Demander une inscription
                     </button>
-                    <p className="text-xs text-gray-400 text-center">Accès immédiat à toutes les ressources</p>
-                  </div>
+                    <ul className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
+                      <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Formation en présentiel</li>
+                      <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Certificat de complétion</li>
+                      <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Organisme certifié Qualiopi</li>
+                      {formation.lieu && <li className="flex items-center gap-2"><MapPin className="w-4 h-4 text-orange-400"/> {formation.lieu}</li>}
+                    </ul>
+                  </>
                 )}
-
-                <ul className="mt-4 space-y-2 text-sm text-gray-500 dark:text-gray-400">
-                  <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Accès à vie</li>
-                  <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Certificat de complétion</li>
-                  <li className="flex items-center gap-2"><span className="text-green-500">✓</span> Support formateur</li>
-                </ul>
               </div>
             </div>
           </div>
@@ -161,6 +146,44 @@ export default function FormationDetail() {
               <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Description</h2>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{formation.description}</p>
             </div>
+
+            {/* Objectifs / Prérequis / Public visé */}
+            {(formation.objectifs || formation.prerequis || formation.public_vise) && (
+              <div className="grid sm:grid-cols-3 gap-4">
+                {formation.objectifs && (
+                  <div className="card p-5">
+                    <div className="flex items-center gap-2 text-primary-600 dark:text-primary-400 font-bold mb-3">
+                      <Target className="w-5 h-5"/> Objectifs
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{formation.objectifs}</p>
+                  </div>
+                )}
+                {formation.prerequis && (
+                  <div className="card p-5">
+                    <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400 font-bold mb-3">
+                      <BookOpen className="w-5 h-5"/> Prérequis
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{formation.prerequis}</p>
+                  </div>
+                )}
+                {formation.public_vise && (
+                  <div className="card p-5">
+                    <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-bold mb-3">
+                      <Users className="w-5 h-5"/> Public visé
+                    </div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{formation.public_vise}</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Modalités */}
+            {formation.modalites && (
+              <div className="card p-6">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Modalités pédagogiques</h2>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{formation.modalites}</p>
+              </div>
+            )}
 
             {/* Instructor */}
             {formation.instructor && (
@@ -178,7 +201,7 @@ export default function FormationDetail() {
               </div>
             )}
 
-            {/* Modules */}
+            {/* Modules / Programme */}
             {formation.modules?.length > 0 && (
               <div className="card p-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
@@ -196,10 +219,8 @@ export default function FormationDetail() {
                           <span className="font-semibold text-gray-900 dark:text-white">{mod.title}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-400">
-                          <span>{mod.videos?.length || 0} vidéos</span>
-                          <svg className={`w-4 h-4 transition-transform ${openModule === i ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
-                          </svg>
+                          <span>{mod.videos?.length || 0} séquences</span>
+                          <ChevronDown className={`w-4 h-4 transition-transform ${openModule === i ? 'rotate-180' : ''}`}/>
                         </div>
                       </button>
                       {openModule === i && mod.videos?.length > 0 && (
@@ -225,9 +246,9 @@ export default function FormationDetail() {
 
             {/* Reviews */}
             <div className="card p-6">
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Avis des apprenants</h2>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Avis des participants</h2>
 
-              {user && enrollment && (
+              {user && (
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4 mb-6">
                   <p className="font-semibold text-gray-900 dark:text-white text-sm mb-3">Donnez votre avis</p>
                   <StarRating value={myRating} onChange={setMyRating} size="lg"/>
@@ -261,6 +282,14 @@ export default function FormationDetail() {
               ) : (
                 <p className="text-gray-400 text-sm">Aucun avis pour l'instant. Soyez le premier !</p>
               )}
+            </div>
+          </div>
+
+          {/* Sidebar — inscription form on desktop */}
+          <div className="hidden lg:block">
+            <div className="sticky top-24 card p-6">
+              <h3 className="font-bold text-gray-900 dark:text-white mb-4">S'inscrire à cette formation</h3>
+              <InscriptionForm formation={formation}/>
             </div>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { MapPin, Clock, Users } from 'lucide-react'
 
 const levelColors = {
   'débutant':      'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
@@ -7,7 +8,7 @@ const levelColors = {
 }
 
 export default function FormationCard({ formation, index = 0 }) {
-  const { id, title, short_description, category, level, price, image_url, instructor, avg_rating, rating_count, enrollment_count, duration } = formation
+  const { id, title, short_description, category, level, image_url, instructor, avg_rating, rating_count, enrollment_count, duration, lieu } = formation
 
   return (
     <Link to={`/formations/${id}`}
@@ -39,9 +40,6 @@ export default function FormationCard({ formation, index = 0 }) {
             <span className="badge bg-white/90 dark:bg-gray-800/90 text-gray-600 dark:text-gray-300">{category}</span>
           </div>
         )}
-
-        {/* Price overlay */}
-        <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"/>
       </div>
 
       {/* Content */}
@@ -61,17 +59,20 @@ export default function FormationCard({ formation, index = 0 }) {
         )}
 
         {/* Meta */}
-        <div className="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-4">
+        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mb-4">
+          {lieu && (
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3.5 h-3.5"/> {lieu}
+            </span>
+          )}
           {duration && (
             <span className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l4 2"/></svg>
-              {duration}
+              <Clock className="w-3.5 h-3.5"/> {duration}
             </span>
           )}
           {enrollment_count > 0 && (
             <span className="flex items-center gap-1">
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-              {enrollment_count} inscrits
+              <Users className="w-3.5 h-3.5"/> {enrollment_count} inscrits
             </span>
           )}
         </div>
@@ -89,8 +90,8 @@ export default function FormationCard({ formation, index = 0 }) {
               <span className="text-xs text-gray-400 italic">Nouveau</span>
             )}
           </div>
-          <span className={`font-bold text-lg transition-colors duration-200 ${price === 0 ? 'text-green-600 dark:text-green-400' : 'text-primary-600 dark:text-primary-400 group-hover:text-orange-500'}`}>
-            {price === 0 ? 'Gratuit' : `${price} €`}
+          <span className="text-xs font-semibold text-primary-600 dark:text-primary-400 group-hover:text-orange-500 transition-colors duration-200">
+            En savoir plus →
           </span>
         </div>
       </div>

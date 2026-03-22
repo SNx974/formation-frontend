@@ -14,8 +14,8 @@ export default function AdminDashboard() {
   const statCards = stats ? [
     { label: 'Utilisateurs', value: stats.users, icon: '👥', color: 'from-blue-500 to-blue-600', link: '/admin/users' },
     { label: 'Formations', value: stats.formations, icon: '📚', color: 'from-primary-500 to-primary-600', link: '/admin/formations' },
-    { label: 'Inscriptions', value: stats.enrollments, icon: '📋', color: 'from-orange-500 to-orange-600', link: '/admin/enrollments' },
-    { label: 'Revenus', value: `${stats.revenue.toFixed(0)} €`, icon: '💰', color: 'from-green-500 to-green-600' },
+    { label: 'Accès plateforme', value: stats.enrollments, icon: '📋', color: 'from-purple-500 to-purple-600', link: '/admin/enrollments' },
+    { label: 'Nouvelles demandes', value: stats.new_inscriptions, icon: '📨', color: 'from-orange-500 to-orange-600', link: '/admin/inscriptions' },
   ] : []
 
   return (

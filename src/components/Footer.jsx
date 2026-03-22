@@ -1,4 +1,12 @@
 import { Link } from 'react-router-dom'
+import { MapPin, Mail, Phone, Award } from 'lucide-react'
+
+const SITES = [
+  { name: 'Saint-Denis', address: 'Centre ville' },
+  { name: 'Saint-Pierre', address: 'Centre commercial' },
+  { name: 'Saint-Paul', address: 'Zone artisanale' },
+  { name: 'Le Tampon', address: 'Quartier des Flamboyants' },
+]
 
 export default function Footer() {
   return (
@@ -6,7 +14,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* Brand */}
-          <div className="md:col-span-2">
+          <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-orange-500 flex items-center justify-center">
                 <span className="text-white font-black text-lg">S</span>
@@ -16,12 +24,15 @@ export default function Footer() {
                 <div className="text-xs text-gray-400">La SYNERGIE de nos compétences</div>
               </div>
             </div>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
-              Plateforme de formation en ligne dédiée à votre montée en compétences. Des formations de qualité, accessibles à tous.
+            <p className="text-gray-400 text-sm leading-relaxed mb-4">
+              Organisme de formation professionnelle certifié Qualiopi, implanté sur 4 sites à La Réunion.
             </p>
+            <div className="inline-flex items-center gap-1.5 bg-orange-500/20 text-orange-400 text-xs font-semibold px-3 py-1.5 rounded-full border border-orange-500/30">
+              <Award className="w-3.5 h-3.5"/> Certifié Qualiopi
+            </div>
           </div>
 
-          {/* Links */}
+          {/* Navigation */}
           <div>
             <h4 className="font-semibold text-white mb-4">Navigation</h4>
             <ul className="space-y-2">
@@ -29,7 +40,7 @@ export default function Footer() {
                 { to: '/', label: 'Accueil' },
                 { to: '/formations', label: 'Formations' },
                 { to: '/a-propos', label: 'À propos' },
-                { to: '/support', label: 'Support' },
+                { to: '/support', label: 'Contact' },
               ].map(({ to, label }) => (
                 <li key={to}>
                   <Link to={to} className="text-gray-400 hover:text-orange-400 text-sm transition-colors">{label}</Link>
@@ -38,28 +49,41 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Sites */}
+          <div>
+            <h4 className="font-semibold text-white mb-4">Nos sites</h4>
+            <ul className="space-y-2">
+              {SITES.map(site => (
+                <li key={site.name} className="flex items-start gap-1.5 text-sm text-gray-400">
+                  <MapPin className="w-3.5 h-3.5 text-orange-400 shrink-0 mt-0.5"/>
+                  <span><span className="text-gray-300 font-medium">{site.name}</span></span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Contact */}
           <div>
             <h4 className="font-semibold text-white mb-4">Contact</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
+            <ul className="space-y-3 text-sm text-gray-400">
               <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                </svg>
-                contact@seformer.fr
+                <Mail className="w-4 h-4 text-orange-400 shrink-0"/>
+                contact@seformer.re
               </li>
               <li className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-                </svg>
-                +33 1 23 45 67 89
+                <Phone className="w-4 h-4 text-orange-400 shrink-0"/>
+                0262 00 00 00
+              </li>
+              <li className="flex items-start gap-2 mt-4">
+                <MapPin className="w-4 h-4 text-orange-400 shrink-0 mt-0.5"/>
+                <span>La Réunion (974)</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© 2024 SE FORMER, ÉVOLUER. Tous droits réservés.</p>
+          <p className="text-gray-500 text-sm">© {new Date().getFullYear()} SE FORMER, ÉVOLUER. Tous droits réservés.</p>
           <div className="flex gap-4 text-xs text-gray-500">
             <a href="#" className="hover:text-gray-300 transition-colors">Mentions légales</a>
             <a href="#" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>

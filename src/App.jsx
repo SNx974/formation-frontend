@@ -21,6 +21,8 @@ import AdminFormations from './pages/admin/AdminFormations'
 import AdminFormationEdit from './pages/admin/AdminFormationEdit'
 import AdminUsers from './pages/admin/AdminUsers'
 import AdminEnrollments from './pages/admin/AdminEnrollments'
+import AdminInscriptions from './pages/admin/AdminInscriptions'
+import AdminSettings from './pages/admin/AdminSettings'
 
 function Spinner() {
   return (
@@ -73,6 +75,8 @@ export default function App() {
                 <Route path="formations/:id/edit" element={<AdminFormationEdit/>}/>
                 <Route path="users" element={<AdminUsers/>}/>
                 <Route path="enrollments" element={<AdminEnrollments/>}/>
+                <Route path="inscriptions" element={<AdminInscriptions/>}/>
+                <Route path="settings" element={<AdminSettings/>}/>
               </Route>
               <Route path="*" element={<Navigate to="/" replace/>}/>
             </Routes>
