@@ -46,7 +46,7 @@ export default function Home() {
   }, [])
 
   const heroImage = settings.hero_image
-  const heroTitle = settings.hero_title || 'SE FORMER, ÉVOLUER'
+  const heroTitle = settings.hero_title || 'SYNERGIE OI'
   const heroSubtitle = settings.hero_subtitle || 'La SYNERGIE de nos compétences au service de la formation'
 
   return (
@@ -75,14 +75,10 @@ export default function Home() {
               </div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-white/30 to-orange-400 border-2 border-white/40 flex items-center justify-center shadow-xl hover:scale-110 transition-transform duration-300">
-                  <span className="text-white font-black text-3xl">S</span>
-                </div>
+                <img src="/logo.png" alt="SYNERGIE OI" className="h-16 w-auto brightness-0 invert drop-shadow-xl"/>
                 <div>
                   <h1 className="text-3xl lg:text-4xl font-black leading-tight">
-                    {heroTitle.includes(',') ? (
-                      <>{heroTitle.split(',')[0]},<br/><span className="text-orange-300">{heroTitle.split(',')[1]?.trim()}</span></>
-                    ) : heroTitle}
+                    SYNERGIE OI<br/><span className="text-orange-300 text-2xl lg:text-3xl">Centre de formation</span>
                   </h1>
                 </div>
               </div>
@@ -277,7 +273,7 @@ export default function Home() {
           </div>
           <h2 className="text-3xl lg:text-4xl font-black mb-4">Prêt à évoluer ?</h2>
           <p className="text-primary-200 text-lg mb-8">
-            Rejoignez les professionnels réunionnais qui font confiance à SE FORMER, ÉVOLUER.
+            Rejoignez les professionnels réunionnais qui font confiance à SYNERGIE OI.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/formations" className="btn-orange text-base px-10 py-4 hover:scale-105 transition-transform">Voir les formations</Link>

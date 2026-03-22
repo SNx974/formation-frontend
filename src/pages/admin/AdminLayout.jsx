@@ -29,12 +29,10 @@ export default function AdminLayout() {
       <aside className={`${sidebarOpen ? 'w-64' : 'w-16'} flex-shrink-0 bg-gray-900 dark:bg-gray-950 text-white flex flex-col transition-all duration-300`}>
         {/* Logo */}
         <div className="p-4 border-b border-gray-800 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-primary-500 to-orange-500 flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-black">S</span>
-          </div>
+          <img src="/logo.png" alt="SYNERGIE OI" className="h-8 w-auto brightness-0 invert flex-shrink-0"/>
           {sidebarOpen && (
             <div className="overflow-hidden">
-              <div className="text-sm font-bold text-white truncate">SE FORMER</div>
+              <div className="text-sm font-bold text-white truncate">SYNERGIE OI</div>
               <div className="text-xs text-orange-400 font-semibold">Administration</div>
             </div>
           )}

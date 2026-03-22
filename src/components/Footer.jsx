@@ -16,12 +16,10 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-orange-500 flex items-center justify-center">
-                <span className="text-white font-black text-lg">S</span>
-              </div>
+              <img src="/logo.png" alt="SYNERGIE OI" className="h-12 w-auto brightness-0 invert"/>
               <div>
-                <div className="font-bold text-white text-sm">SE FORMER, ÉVOLUER</div>
-                <div className="text-xs text-gray-400">La SYNERGIE de nos compétences</div>
+                <div className="font-bold text-white text-sm">SYNERGIE OI</div>
+                <div className="text-xs text-gray-400">Centre de formation</div>
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-4">
@@ -83,7 +81,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">© {new Date().getFullYear()} SE FORMER, ÉVOLUER. Tous droits réservés.</p>
+          <p className="text-gray-500 text-sm">© {new Date().getFullYear()} SYNERGIE OI. Tous droits réservés.</p>
           <div className="flex gap-4 text-xs text-gray-500">
             <a href="#" className="hover:text-gray-300 transition-colors">Mentions légales</a>
             <a href="#" className="hover:text-gray-300 transition-colors">Politique de confidentialité</a>

@@ -58,7 +58,7 @@ export default function AdminSettings() {
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre principal</label>
             <input value={settings.hero_title} onChange={e => set('hero_title', e.target.value)}
-              className="input" placeholder="SE FORMER, ÉVOLUER"/>
+              className="input" placeholder="SYNERGIE OI"/>
           </div>
 
           <div>

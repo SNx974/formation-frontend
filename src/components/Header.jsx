@@ -46,12 +46,10 @@ export default function Header() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-orange-500 flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:shadow-primary-500/40 transition-all duration-300">
-              <span className="text-white font-black text-lg">S</span>
-            </div>
+            <img src="/logo.png" alt="SYNERGIE OI" className="h-10 w-auto group-hover:scale-110 transition-transform duration-300"/>
             <div className="hidden sm:block">
-              <div className="font-bold text-primary-700 dark:text-primary-300 text-sm leading-tight">SE FORMER,</div>
-              <div className="font-bold text-orange-500 text-sm leading-tight">ÉVOLUER</div>
+              <div className="font-bold text-primary-700 dark:text-primary-300 text-sm leading-tight">SYNERGIE OI</div>
+              <div className="font-bold text-orange-500 text-xs leading-tight">Centre de formation</div>
             </div>
           </Link>
 
