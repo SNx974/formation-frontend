@@ -1,0 +1,235 @@
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import api from '../api/axios'
+import FormationCard from '../components/FormationCard'
+
+const testimonials = [
+  { name: 'Amina Kone', role: 'Développeuse Web', text: 'Les formations sont claires et bien structurées. J\'ai trouvé un emploi 2 mois après ma formation !', avatar: 'A' },
+  { name: 'Pierre Morin', role: 'Data Analyst', text: 'Excellent contenu, formateurs compétents. La plateforme est intuitive et agréable à utiliser.', avatar: 'P' },
+  { name: 'Sara Benmoussa', role: 'UX Designer', text: 'J\'ai doublé mon salaire grâce à la formation Design. Je recommande vivement !', avatar: 'S' },
+]
+
+const stats = [
+  { value: '50+', label: 'Formations disponibles' },
+  { value: '2 000+', label: 'Apprenants actifs' },
+  { value: '95%', label: 'Taux de satisfaction' },
+  { value: '15+', label: 'Formateurs experts' },
+]
+
+export default function Home() {
+  const [formations, setFormations] = useState([])
+
+  useEffect(() => {
+    api.get('/formations').then(r => setFormations(r.data.slice(0, 3))).catch(() => {})
+  }, [])
+
+  return (
+    <div>
+      {/* HERO */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary-700 via-primary-600 to-primary-800 dark:from-gray-900 dark:via-primary-900 dark:to-gray-900 text-white">
+        {/* Background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-20 -right-20 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl"/>
+          <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-primary-400/20 rounded-full blur-3xl"/>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="animate-slide-up">
+              {/* Logo large */}
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-white/30 to-orange-400 border-2 border-white/40 flex items-center justify-center shadow-xl">
+                  <span className="text-white font-black text-3xl">S</span>
+                </div>
+                <div>
+                  <h1 className="text-3xl lg:text-4xl font-black leading-tight">SE FORMER,<br/><span className="text-orange-300">ÉVOLUER</span></h1>
+                </div>
+              </div>
+
+              <p className="text-lg text-primary-100 mb-4 font-medium">
+                La SYNERGIE de nos compétences au service de la formation
+              </p>
+              <p className="text-primary-200 text-base mb-8 leading-relaxed max-w-lg">
+                Développez vos compétences avec des formations de qualité, dispensées par des experts du domaine. Apprenez à votre rythme, progressez, évoluez.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <Link to="/formations" className="btn-orange text-base px-8 py-3">
+                  Voir les formations
+                </Link>
+                <Link to="/register" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-3 px-8 rounded-full transition-all duration-200 text-base">
+                  S'inscrire gratuitement
+                </Link>
+              </div>
+            </div>
+
+            {/* Right illustration */}
+            <div className="hidden lg:flex justify-center">
+              <div className="relative">
+                <div className="w-72 h-72 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
+                  <div className="w-52 h-52 rounded-full bg-gradient-to-br from-orange-400/50 to-primary-500/50 flex items-center justify-center">
+                    <svg className="w-28 h-28 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                  </div>
+                </div>
+                {/* Floating badges */}
+                <div className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-primary-600 dark:text-primary-300">
+                  🎓 50+ Formations
+                </div>
+                <div className="absolute -bottom-4 -left-4 bg-orange-500 rounded-2xl shadow-xl px-4 py-2 text-sm font-semibold text-white">
+                  ✨ 95% satisfaits
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Wave */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 80" className="w-full fill-white dark:fill-gray-950">
+            <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z"/>
+          </svg>
+        </div>
+      </section>
+
+      {/* STATS */}
+      <section className="py-12 bg-white dark:bg-gray-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+            {stats.map((s, i) => (
+              <div key={i} className="text-center p-6 rounded-2xl bg-gradient-to-br from-primary-50 to-orange-50 dark:from-primary-900/20 dark:to-orange-900/10">
+                <div className="text-3xl font-black text-primary-600 dark:text-primary-400">{s.value}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400 mt-1">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FORMATIONS POPULAIRES */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Populaires</span>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2">Nos formations phares</h2>
+            <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">
+              Sélectionnées par nos experts pour leur qualité et leur pertinence sur le marché.
+            </p>
+          </div>
+
+          {formations.length > 0 ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+              {formations.map(f => <FormationCard key={f.id} formation={f}/>)}
+            </div>
+          ) : (
+            <div className="text-center py-12 text-gray-400">Chargement des formations...</div>
+          )}
+
+          <div className="text-center">
+            <Link to="/formations" className="btn-primary text-base px-10 py-3">
+              Voir toutes les formations →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CONCEPT */}
+      <section className="py-16 bg-white dark:bg-gray-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Notre approche</span>
+              <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2 mb-6">
+                Formez-vous à votre rythme, évoluez sans limites
+              </h2>
+              <div className="space-y-4">
+                {[
+                  { icon: '🎯', title: 'Contenu ciblé', desc: 'Des formations conçues par des professionnels pour répondre aux besoins réels du marché.' },
+                  { icon: '⚡', title: 'Apprentissage flexible', desc: 'Accédez à vos cours 24h/24, 7j/7, depuis n\'importe quel appareil.' },
+                  { icon: '🏆', title: 'Certification reconnue', desc: 'Obtenez des certificats valorisables sur votre CV et LinkedIn.' },
+                  { icon: '👥', title: 'Communauté active', desc: 'Rejoignez une communauté d\'apprenants passionnés et de mentors disponibles.' },
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="text-2xl">{item.icon}</div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                      <p className="text-gray-500 dark:text-gray-400 text-sm">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-3xl p-8 text-white">
+                <h3 className="text-xl font-bold mb-6">Votre parcours en 3 étapes</h3>
+                {[
+                  { step: '01', title: 'Choisissez votre formation', desc: 'Parcourez notre catalogue et sélectionnez la formation qui correspond à vos objectifs.' },
+                  { step: '02', title: 'Apprenez à votre rythme', desc: 'Suivez les modules vidéo, exercices pratiques et projets guidés.' },
+                  { step: '03', title: 'Obtenez votre certificat', desc: 'Validez vos acquis et décrrochez votre certification reconnue.' },
+                ].map((item, i) => (
+                  <div key={i} className={`flex gap-4 ${i < 2 ? 'mb-6' : ''}`}>
+                    <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center font-black text-sm shrink-0">{item.step}</div>
+                    <div>
+                      <h4 className="font-bold text-sm">{item.title}</h4>
+                      <p className="text-primary-200 text-xs mt-1">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Témoignages</span>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mt-2">Ce qu'ils disent de nous</h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t, i) => (
+              <div key={i} className="card p-6">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(5)].map((_, s) => (
+                    <svg key={s} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4">"{t.text}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-orange-400 flex items-center justify-center text-white font-bold">
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gray-900 dark:text-white text-sm">{t.name}</div>
+                    <div className="text-xs text-gray-400">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-800 dark:from-primary-900 dark:to-gray-900 text-white">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl lg:text-4xl font-black mb-4">Prêt à évoluer ?</h2>
+          <p className="text-primary-200 text-lg mb-8">
+            Rejoignez des milliers d'apprenants qui ont transformé leur carrière avec nos formations.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Link to="/register" className="btn-orange text-base px-10 py-4">Commencer gratuitement</Link>
+            <Link to="/formations" className="bg-white/10 hover:bg-white/20 border border-white/30 text-white font-semibold py-4 px-10 rounded-full transition-all duration-200 text-base">
+              Voir les formations
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
